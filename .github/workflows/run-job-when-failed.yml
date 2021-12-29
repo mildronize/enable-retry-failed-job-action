@@ -1,7 +1,7 @@
 name: Run job when failed
 
 on:
-  # push:
+  push:
   workflow_dispatch:
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env: [cat, dog, ant, fish]
+        env: [cat]
     steps:
     - uses: actions/checkout@v2
 
@@ -22,18 +22,25 @@ jobs:
     #   with:
     #     cache_key: ${{ matrix.env }}
 
-    - name: Use env ${{ matrix.env }}
-      id: test_run
-      if: steps.last_run_status.outputs.last_run_status != 'success'
-      run: |
-        RANDOM_NUMBER=$((1 + $RANDOM % 100))
-        echo $RANDOM_NUMBER
-        sleep 10
-        if [ $RANDOM_NUMBER -gt 35 ]; then
-          exit 1
-        fi
+    - name: Call this action
+      id: last_run_status
+      uses: ./
+
+    - name: last_run_status 
+      run: echo 'last_run_status ==== ${{ steps.last_run_status.outputs.last_run_status}}'
+
+    # - name: Use env ${{ matrix.env }}
+    #   id: test_run
+    #   if: steps.last_run_status.outputs.last_run_status != 'success'
+    #   run: |
+    #     RANDOM_NUMBER=$((1 + $RANDOM % 100))
+    #     echo $RANDOM_NUMBER
+    #     sleep 10
+    #     if [ $RANDOM_NUMBER -gt 35 ]; then
+    #       exit 1
+    #     fi
     
-    - name: Save run status
-      if: steps.last_run_status.outputs.last_run_status != 'success'
-      run: |
-        echo "::set-output name=last_run_status::${{ steps.test_run.outcome }}" > last_run_status
+    # - name: Save run status
+    #   if: steps.last_run_status.outputs.last_run_status != 'success'
+    #   run: |
+    #     echo "::set-output name=last_run_status::${{ steps.test_run.outcome }}" > last_run_status
