@@ -60552,6 +60552,7 @@ exports.DateNowPath = exports.LastStatusPath = exports.OutputName = exports.Outp
 var Inputs;
 (function (Inputs) {
     Inputs["Key"] = "key";
+    Inputs["RunStatus"] = "run-status";
 })(Inputs = exports.Inputs || (exports.Inputs = {}));
 var Outputs;
 (function (Outputs) {
@@ -60613,14 +60614,21 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const uniqueKey = core.getInput(constants_1.Inputs.Key) || "default_key";
-            const dateNow = yield fs_1.default.promises.readFile(constants_1.DateNowPath);
+            const runStatus = core.getInput(constants_1.Inputs.RunStatus, { required: true });
+            const dateNow = yield fs_1.default.promises.readFile(constants_1.DateNowPath, 'utf8');
+            const LastRunStatus = yield fs_1.default.promises.readFile(constants_1.LastStatusPath, 'utf8');
+            console.log(`LastRunStatus = ${LastRunStatus}`);
+            if (LastRunStatus != "success") {
+                // Saving running result
+                yield fs_1.default.promises.writeFile(constants_1.LastStatusPath, `::set-output name=${constants_1.OutputName}::${runStatus}`);
+            }
+            console.log(`runStatus = ${runStatus}`);
+            // Caching
             const paths = [constants_1.LastStatusPath];
             const primaryKey = `${github.context.runId}-${uniqueKey}-${dateNow}`;
             const cacheId = yield cache.saveCache(paths, primaryKey);
             console.log(`cacheId = ${cacheId}`);
             console.log(`primaryKey = ${primaryKey}`);
-            const LastRunStatus = yield fs_1.default.promises.readFile(constants_1.LastStatusPath);
-            console.log(`LastRunStatus = ${LastRunStatus}`);
         }
         catch (error) {
             core.setFailed(`Action failed with error ${error}`);

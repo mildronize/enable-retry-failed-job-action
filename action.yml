@@ -2,10 +2,14 @@ name: "Rerunnable Action"
 description: "Some time jobs can failed in unknown cause, this action will help to retry only failed jobs"
 
 inputs:
-  cache_key:
+  key:
     description: "Unique key for cache ex. matrix value"
     require: false
     default: default_key
+
+  run-status:
+    description: "run-status"
+    require: true
 
 outputs:
   last-run-status:

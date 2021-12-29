@@ -12,16 +12,28 @@ import { Inputs, Outputs, OutputName, LastStatusPath, DateNowPath} from "./const
 async function run(): Promise<void> {
     try {
         const uniqueKey = core.getInput(Inputs.Key) || "default_key";
-        const dateNow = await fs.promises.readFile(DateNowPath);
+        const runStatus = core.getInput(Inputs.RunStatus, { required: true });
+        const dateNow = await fs.promises.readFile(DateNowPath, 'utf8');
+        
+        const LastRunStatus = await fs.promises.readFile(LastStatusPath, 'utf8');
+        console.log(`LastRunStatus = ${LastRunStatus}`);
+
+        if(LastRunStatus != "success"){
+            // Saving running result
+            await fs.promises.writeFile(LastStatusPath , `::set-output name=${OutputName}::${runStatus}`);
+        }
+        console.log(`runStatus = ${runStatus}`);
+
+        // Caching
         const paths = [ LastStatusPath ];
         const primaryKey = `${github.context.runId}-${uniqueKey}-${dateNow}`;
         const cacheId  = await cache.saveCache(
             paths, 
             primaryKey);
+
         console.log(`cacheId = ${cacheId}`);
         console.log(`primaryKey = ${primaryKey}`);
-        const LastRunStatus = await fs.promises.readFile(LastStatusPath);
-        console.log(`LastRunStatus = ${LastRunStatus}`);
+
     } catch (error) {
         core.setFailed(`Action failed with error ${error}`);
     }

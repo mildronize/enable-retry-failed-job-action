@@ -60552,6 +60552,7 @@ exports.DateNowPath = exports.LastStatusPath = exports.OutputName = exports.Outp
 var Inputs;
 (function (Inputs) {
     Inputs["Key"] = "key";
+    Inputs["RunStatus"] = "run-status";
 })(Inputs = exports.Inputs || (exports.Inputs = {}));
 var Outputs;
 (function (Outputs) {
@@ -60620,15 +60621,14 @@ function run() {
             const primaryKey = `${github.context.runId}-${uniqueKey}-${dateNow}`;
             const restoreKeys = [`${github.context.runId}-${uniqueKey}`];
             const cacheKey = yield cache.restoreCache(paths, primaryKey, restoreKeys);
-            // core.saveState
-            const LastRunStatus = yield fs_1.default.promises.readFile(constants_1.LastStatusPath);
+            const LastRunStatus = yield fs_1.default.promises.readFile(constants_1.LastStatusPath, 'utf8');
+            // Print Output
+            if (cacheKey) {
+                core.setOutput(constants_1.Outputs.LastRunStatus, LastRunStatus);
+            }
             console.log(`LastRunStatus = ${LastRunStatus}`);
             console.log(`cacheKey = ${cacheKey}`);
             console.log(`primaryKey = ${primaryKey}`);
-            // if (primaryKey === cacheKey){
-            //     core.setOutput(Outputs.LastRunStatus, );
-            // }
-            core.setOutput(constants_1.Outputs.LastRunStatus, "HEY output");
         }
         catch (error) {
             core.setFailed(`Action failed with error ${error}`);

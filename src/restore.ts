@@ -23,16 +23,14 @@ async function run(): Promise<void> {
             paths, 
             primaryKey,
             restoreKeys);
-        // core.saveState
-        const LastRunStatus = await fs.promises.readFile(LastStatusPath);
+        const LastRunStatus = await fs.promises.readFile(LastStatusPath, 'utf8');
+        // Print Output
+        if (cacheKey){
+            core.setOutput(Outputs.LastRunStatus, LastRunStatus);
+        }
         console.log(`LastRunStatus = ${LastRunStatus}`);
         console.log(`cacheKey = ${cacheKey}`);
         console.log(`primaryKey = ${primaryKey}`);
-        // if (primaryKey === cacheKey){
-        //     core.setOutput(Outputs.LastRunStatus, );
-        // }
-        core.setOutput(Outputs.LastRunStatus, "HEY output");
-  
     } catch (error) {
         core.setFailed(`Action failed with error ${error}`);
     }

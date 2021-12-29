@@ -1,5 +1,6 @@
 export enum Inputs {
-    Key = "key"
+    Key = "key",
+    RunStatus = "run-status"
 }
 
 export enum Outputs {
