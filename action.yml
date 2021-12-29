@@ -7,9 +7,9 @@ inputs:
     require: false
     default: default_key
 
-# outputs:
-#   last_run_status:
-#     description: "Last status of running job"
+outputs:
+  last-run-status:
+    description: "Last status of running job"
 
 runs:
   using: 'node12'

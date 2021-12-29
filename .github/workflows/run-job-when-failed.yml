@@ -23,11 +23,11 @@ jobs:
     #     cache_key: ${{ matrix.env }}
 
     - name: Call this action
-      id: last_run_status
+      id: rerunnable-action
       uses: ./
 
     - name: last_run_status 
-      run: echo 'last_run_status ==== ${{ steps.last_run_status.outputs.last_run_status}}'
+      run: echo 'last_run_status ==== ${{ steps.rerunnable-action.outputs.last-run-status}}'
 
     # - name: Use env ${{ matrix.env }}
     #   id: test_run
