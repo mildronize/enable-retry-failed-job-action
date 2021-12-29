@@ -6,6 +6,7 @@ import fs from "fs";
 // const fs = require('fs').promises;
 
 import { Inputs, Outputs } from "./constants";
+import { dateNow } from "./utils";
 // import * as utils from "./utils/actionUtils";
 
 const OutputName = "last_run_status";
@@ -14,7 +15,7 @@ const LastStatusPath = "last_run_status";
 async function run(): Promise<void> {
     try {
         const uniqueKey = core.getInput(Inputs.Key) || "default_key";
-        const dateNow = (new Date()).toISOString();
+        // const dateNow = (new Date()).toISOString();
         await fs.promises.writeFile(LastStatusPath , `::set-output name=${OutputName}::default`);
         const paths = [ LastStatusPath ];
         const primaryKey = `${github.context.runId}-${uniqueKey}-${dateNow}`;
