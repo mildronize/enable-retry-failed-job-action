@@ -14,8 +14,9 @@ const LastStatusPath = "last_run_status";
 async function run(): Promise<void> {
     try {
         const uniqueKey = core.getInput(Inputs.Key) || "default_key";
+        const dateNow = (new Date()).toISOString();
         const paths = [ LastStatusPath ];
-        const primaryKey = `${github.context.runId}-${uniqueKey}`;
+        const primaryKey = `${github.context.runId}-${uniqueKey}-${dateNow}`;
         const cacheId  = await cache.saveCache(
             paths, 
             primaryKey);

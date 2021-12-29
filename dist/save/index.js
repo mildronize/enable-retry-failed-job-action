@@ -60611,8 +60611,9 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const uniqueKey = core.getInput(constants_1.Inputs.Key) || "default_key";
+            const dateNow = (new Date()).toISOString();
             const paths = [LastStatusPath];
-            const primaryKey = `${github.context.runId}-${uniqueKey}`;
+            const primaryKey = `${github.context.runId}-${uniqueKey}-${dateNow}`;
             const cacheId = yield cache.saveCache(paths, primaryKey);
             console.log(`cacheId = ${cacheId}`);
             console.log(`primaryKey = ${primaryKey}`);

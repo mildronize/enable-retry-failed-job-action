@@ -17,8 +17,8 @@ async function run(): Promise<void> {
         const dateNow = (new Date()).toISOString();
         await fs.promises.writeFile(LastStatusPath , `::set-output name=${OutputName}::default`);
         const paths = [ LastStatusPath ];
-        const primaryKey = `${github.context.runId}-${uniqueKey}`;
-        const restoreKeys = [];
+        const primaryKey = `${github.context.runId}-${uniqueKey}-${dateNow}`;
+        const restoreKeys = [ `${github.context.runId}-${uniqueKey}` ];
         const cacheKey = await cache.restoreCache(
             paths, 
             primaryKey,

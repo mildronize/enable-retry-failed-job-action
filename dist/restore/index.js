@@ -60614,8 +60614,8 @@ function run() {
             const dateNow = (new Date()).toISOString();
             yield fs_1.default.promises.writeFile(LastStatusPath, `::set-output name=${OutputName}::default`);
             const paths = [LastStatusPath];
-            const primaryKey = `${github.context.runId}-${uniqueKey}`;
-            const restoreKeys = [];
+            const primaryKey = `${github.context.runId}-${uniqueKey}-${dateNow}`;
+            const restoreKeys = [`${github.context.runId}-${uniqueKey}`];
             const cacheKey = yield cache.restoreCache(paths, primaryKey, restoreKeys);
             // core.saveState
             const LastRunStatus = yield fs_1.default.promises.readFile(LastStatusPath);
