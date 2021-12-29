@@ -60548,7 +60548,7 @@ function wrappy (fn, cb) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Outputs = exports.Inputs = void 0;
+exports.DateNowPath = exports.LastStatusPath = exports.OutputName = exports.Outputs = exports.Inputs = void 0;
 var Inputs;
 (function (Inputs) {
     Inputs["Key"] = "key";
@@ -60557,6 +60557,9 @@ var Outputs;
 (function (Outputs) {
     Outputs["LastRunStatus"] = "last-run-status";
 })(Outputs = exports.Outputs || (exports.Outputs = {}));
+exports.OutputName = "last_run_status";
+exports.LastStatusPath = "last_run_status";
+exports.DateNowPath = "date_now";
 
 
 /***/ }),
@@ -60604,21 +60607,19 @@ const github = __importStar(__nccwpck_require__(5438));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 // const fs = require('fs').promises;
 const constants_1 = __nccwpck_require__(9042);
-const utils_1 = __nccwpck_require__(1314);
+// import { dateNow } from "./utils";
 // import * as utils from "./utils/actionUtils";
-const OutputName = "last_run_status";
-const LastStatusPath = "last_run_status";
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const uniqueKey = core.getInput(constants_1.Inputs.Key) || "default_key";
-            // const dateNow = (new Date()).toISOString();
-            const paths = [LastStatusPath];
-            const primaryKey = `${github.context.runId}-${uniqueKey}-${utils_1.dateNow}`;
+            const dateNow = yield fs_1.default.promises.readFile(constants_1.DateNowPath);
+            const paths = [constants_1.LastStatusPath];
+            const primaryKey = `${github.context.runId}-${uniqueKey}-${dateNow}`;
             const cacheId = yield cache.saveCache(paths, primaryKey);
             console.log(`cacheId = ${cacheId}`);
             console.log(`primaryKey = ${primaryKey}`);
-            const LastRunStatus = yield fs_1.default.promises.readFile(LastStatusPath);
+            const LastRunStatus = yield fs_1.default.promises.readFile(constants_1.LastStatusPath);
             console.log(`LastRunStatus = ${LastRunStatus}`);
         }
         catch (error) {
@@ -60628,18 +60629,6 @@ function run() {
 }
 run();
 exports["default"] = run;
-
-
-/***/ }),
-
-/***/ 1314:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.dateNow = void 0;
-exports.dateNow = (new Date()).toISOString();
 
 
 /***/ }),
