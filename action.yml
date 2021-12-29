@@ -1,0 +1,18 @@
+name: "Rerunnable Action"
+description: "Some time jobs can failed in unknown cause, this action will help to retry only failed jobs"
+
+inputs:
+  cache_key:
+    description: "Unique key for cache ex. matrix value"
+    require: false
+    default: default_key
+
+# outputs:
+#   last_run_status:
+#     description: "Last status of running job"
+
+runs:
+  using: 'node12'
+  main: 'dist/restore/index.js'
+  post: 'dist/save/index.js'
+  post-if: 'success()'

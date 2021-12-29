@@ -1,0 +1,39 @@
+name: Run job when failed
+
+on:
+  # push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Run with env name ${{ matrix.env }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    strategy:
+      fail-fast: false
+      matrix:
+        env: [cat, dog, ant, fish]
+    steps:
+    - uses: actions/checkout@v2
+
+    # - name: Call Composite Enable Retriable Failed Jobs
+    #   id: last_run_status
+    #   uses: ./.github/workflows/composite/enable-retriable-failed-job
+    #   with:
+    #     cache_key: ${{ matrix.env }}
+
+    - name: Use env ${{ matrix.env }}
+      id: test_run
+      if: steps.last_run_status.outputs.last_run_status != 'success'
+      run: |
+        RANDOM_NUMBER=$((1 + $RANDOM % 100))
+        echo $RANDOM_NUMBER
+        sleep 10
+        if [ $RANDOM_NUMBER -gt 35 ]; then
+          exit 1
+        fi
+    
+    - name: Save run status
+      if: steps.last_run_status.outputs.last_run_status != 'success'
+      run: |
+        echo "::set-output name=last_run_status::${{ steps.test_run.outcome }}" > last_run_status
