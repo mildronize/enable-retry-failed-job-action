@@ -60621,6 +60621,7 @@ function run() {
             const LastRunStatus = yield fs_1.default.promises.readFile(LastStatusPath);
             console.log(`LastRunStatus = ${LastRunStatus}`);
             console.log(`cacheKey = ${cacheKey}`);
+            console.log(`primaryKey = ${primaryKey}`);
             // if (primaryKey === cacheKey){
             //     core.setOutput(Outputs.LastRunStatus, );
             // }

@@ -27,6 +27,7 @@ async function run(): Promise<void> {
         const LastRunStatus = await fs.promises.readFile(LastStatusPath);
         console.log(`LastRunStatus = ${LastRunStatus}`);
         console.log(`cacheKey = ${cacheKey}`);
+        console.log(`primaryKey = ${primaryKey}`);
         // if (primaryKey === cacheKey){
         //     core.setOutput(Outputs.LastRunStatus, );
         // }
